@@ -1,8 +1,6 @@
 # TP2_FinalDic2025
 # Proyecto Stock API
 
-# Proyecto Stock API
-
 ## Descripción
 Este proyecto es una API RESTful construida con Node.js, Express y MongoDB. Proporciona endpoints para la gestión de productos y álbumes, incluyendo autenticación con JWT.
 
@@ -24,24 +22,28 @@ Este proyecto es una API RESTful construida con Node.js, Express y MongoDB. Prop
 
 4. Crea un archivo .env en la raíz del proyecto con las siguientes variables:
 
-MONGO_URI=<TU_URI_DE_MONGODB>
-DATABASE=ort-database
-SERVER_PORT=3003
-SERVER_HOST=localhost
-JWT_SECRET=<TU_SECRETO_JWT>
+- MONGO_URI=<TU_URI_DE_MONGODB>
+- DATABASE=ort-database
+- SERVER_PORT=3003
+- SERVER_HOST=localhost
+- JWT_SECRET=<TU_SECRETO_JWT>
 
 ## Endpoints principales
-Productos: 
 
-POST /api/v1/productos: Crear un producto.
-GET /api/v1/productos: Listar todos los productos.
-GET /api/v1/productos/:id: Obtener un producto por ID.
-PUT /api/v1/productos/:id: Actualizar un producto (requiere autenticación).
-DELETE /api/v1/productos/:id: Eliminar un producto (requiere autenticación).
+- Login:
+Debajo esta la explicacion 
 
-Álbumes:
+- Productos: 
 
-GET /api/v1/albums/csv: Generar y descargar un archivo CSV con los primeros 15 álbumes.
+1. POST /api/v1/productos: Crear un producto.
+2. GET /api/v1/productos: Listar todos los productos.
+3. GET /api/v1/productos/:id: Obtener un producto por ID.
+4. PUT /api/v1/productos/:id: Actualizar un producto (requiere autenticación).
+5. DELETE /api/v1/productos/:id: Eliminar un producto (requiere autenticación).
+
+- Álbumes:
+
+1. GET /api/v1/albums/csv: Generar y descargar un archivo CSV con los primeros 15 álbumes.
 
 
 ## Cómo obtener el token JWT
