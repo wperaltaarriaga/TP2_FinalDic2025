@@ -3,6 +3,7 @@ node_modules/
 
 # Ignorar archivos de entorno
 .env
+.package-lock.json
 
 # Ignorar archivos de logs
 *.log

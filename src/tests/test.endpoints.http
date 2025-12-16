@@ -1,0 +1,81 @@
+### Instrucciones:
+# 1. Generar un token JWT:
+#    - Registra un usuario enviando una solicitud POST a `/api/user/create` con un cuerpo JSON:
+#      {
+#        "username": "tu-usuario",
+#        "password": "tu-contraseña"
+#      }
+#    - Inicia sesión enviando una solicitud POST a `/api/user/login` con el mismo cuerpo.
+#    - Copia el token JWT de la respuesta y reemplázalo en `{{token}}` en este archivo.
+#
+
+
+@host = http://localhost:3003
+
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NDFkY2RiYzE4NTJlYmZjZTkxOWNiMiIsInVzZXJuYW1lIjoid2FuZGEiLCJpYXQiOjE3NjU5MjQwODAsImV4cCI6MTc2NTkzNDg4MH0.ZLGNkNU8SftZuE3M9rjzxpbJ5hr4Uz3oEKSKOopJHh4
+@productId = 6941e727a42acf0f9c6ac911
+
+## crear usuario
+POST {{host}}api/user/create
+Content-Type: application/json
+
+{
+    "username": "wanda",
+    "password": "soyBatman"
+}
+
+## login usuario y obtener token
+POST {{host}}/api/user/login
+Content-Type: application/json
+
+{
+    "username": "BruceWayne",
+    "password": "soyBatman"
+}
+
+
+### Crear un producto sin token
+POST {{host}}/api/v1/productos
+Content-Type: application/json
+
+{
+    "nombre": "Producto B",
+    "stock": 145
+}
+
+###
+
+### Obtener todos los productos sin token
+GET {{host}}/api/v1/productos
+
+
+### Obtener un producto por ID
+GET {{host}}/api/v1/productos/{{productId}}
+
+
+###
+
+### Actualizar un producto por ID sin token (da error)
+PUT {{host}}/api/v1/productos/{{productId}}
+Content-Type: application/json
+{
+    "id": "{{productId}}",
+    "name": "Producto actualizado",
+    "stock": 150
+}
+
+### Actualizar un producto por ID
+PUT {{host}}/api/v1/productos/{{productId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+{
+    "id": "{{productId}}",
+    "name": "Producto actualizado",
+    "stock": 150
+}
+
+###
+
+### Eliminar un producto por ID protegido
+DELETE {{host}}/api/products/{{productId}}
+Authorization: Bearer {{token}}
