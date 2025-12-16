@@ -3,7 +3,7 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 
 const signToken = (payload) => {
-    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "3h" });
+    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "76h" });
 };
 
 export const UsersController = {

@@ -8,12 +8,12 @@ export const ProductController = {
 			const products = await productRepository.getAll();
 
 			response.status(200).json({
-				message: "OK",
+				message: "Lista de productos obtenida exitosamente",
 				payload: products,
 			});
 		} catch (error) {
 			console.error("Error al obtener los productos:", error.message);
-			response.status(500).json({ error: "Error interno del servidor" });
+			response.status(500).json({ error: "No se pudieron obtener los productos" });
 		}
 	},
 
@@ -24,16 +24,16 @@ export const ProductController = {
 			const product = await productRepository.getOne(id);
 
 			if (!product) {
-				return response.status(404).json({ error: "Producto no encontrado" });
+				return response.status(404).json({ error:`Producto con id ${id} no encontrado` });
 			}
 
 			response.status(200).json({
-				message: "OK",
+				message:  "Producto obtenido exitosamente",
 				payload: product,
 			});
 		} catch (error) {
-			console.error("Error al obtener producto por ID:", error.message);
-			response.status(500).json({ error: "Error interno del servidor" });
+			console.error(`Error al obtener producto con id ${id}:`, error);
+			response.status(500).json({ error: "Error al obtener el producto"});
 		}
 	},
 
@@ -41,38 +41,38 @@ export const ProductController = {
 	createByJson: async (request, response) => {
 		console.log("Métodos disponibles en ProductRepositoryMongoose:", Object.keys(ProductRepositoryMongoose));
 		try {
-			const { nombre, stock} = request.body;
+			const { producto, stockAmount} = request.body;
 
-			if (!nombre|| !stock ){
+			if (!producto|| !stockAmount ){
 				return response.status(400).json({ error: "Faltan campos requeridos" });
 			}
-			console.log(nombre, stock);
+			console.log(producto, stockAmount);
 			const newProduct = await productRepository.createOne({
-				nombre,
-				stock,
+				producto,
+				stockAmount,
 			});
 
 			response.status(201).json({
-				message: "Producto creado correctamente",
+				message: "Producto creado exitosamente",
 				payload: newProduct,
 			});
 		} catch (error) {
 			console.error("Error al crear producto:", error.message);
-			response.status(500).json({ error: "Error interno del servidor" });
+			response.status(500).json({ error: "No se pudo crear el producto" });
 		}
 	},
 
 	// Actualizar producto desde JSON (body)
 	updateByJson: async (request, response) => {
 		try {
-			const { id, nombre, stock } = request.body;
+			const { id, producto, stockAmount } = request.body;
 	
 			if (!id) {
 				return response.status(400).json({ error: "El ID del producto es obligatorio" });
 			}
 	
-			if (typeof stock !== "number") {
-				return response.status(400).json({ error: "El stock debe ser un número válido" });
+			if (typeof stockAmount !== "number") {
+				return response.status(400).json({ error: "El stockAmount debe ser un número válido" });
 			}
 	
 			// Obtener el producto actual
@@ -81,18 +81,18 @@ export const ProductController = {
 				return response.status(404).json({ error: "Producto no encontrado" });
 			}
 	
-			// Validar que el stock nunca sea menor a 0 y solo se pueda actualizar de uno en uno
-			const stockDifference = Math.abs(product.stock - stock);
-			if (stock < 0 || stockDifference !== 1) {
+			// Validar que el stockAmount nunca sea menor a 0 y solo se pueda actualizar de uno en uno
+			const stockAmountDifference = Math.abs(product.stockAmount - stockAmount);
+			if (stockAmount < 0 || stockAmountDifference !== 1) {
 				return response.status(400).json({
-					error: "El stock debe ser mayor o igual a 0 y solo puede ser incrementado o decrementado en 1 unidad",
+					error: "El stockAmount debe ser mayor o igual a 0 y solo puede ser incrementado o decrementado en 1 unidad",
 				});
 			}
 	
 			// Actualizar el producto
 			const updated = await productRepository.updateOne(id, {
-				nombre,
-				stock,
+				producto,
+				stockAmount,
 			});
 	
 			response.status(200).json({

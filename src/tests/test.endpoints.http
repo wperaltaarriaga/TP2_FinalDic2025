@@ -9,13 +9,12 @@
 #    - Copia el token JWT de la respuesta y reemplázalo en `{{token}}` en este archivo.
 #
 
-
 @host = http://localhost:3003
 
 @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NDFkY2RiYzE4NTJlYmZjZTkxOWNiMiIsInVzZXJuYW1lIjoid2FuZGEiLCJpYXQiOjE3NjU5MjQwODAsImV4cCI6MTc2NTkzNDg4MH0.ZLGNkNU8SftZuE3M9rjzxpbJ5hr4Uz3oEKSKOopJHh4
-@productId = 6941e727a42acf0f9c6ac911
+@productId = 6941cdf9a0fbcbdac9dbf20e
 
-## crear usuario
+## Crear un usuario
 POST {{host}}api/user/create
 Content-Type: application/json
 
@@ -27,9 +26,8 @@ Content-Type: application/json
 ## login usuario y obtener token
 POST {{host}}/api/user/login
 Content-Type: application/json
-
 {
-    "username": "BruceWayne",
+    "username": "wanda",
     "password": "soyBatman"
 }
 
@@ -39,13 +37,13 @@ POST {{host}}/api/v1/productos
 Content-Type: application/json
 
 {
-    "nombre": "Producto B",
-    "stock": 145
+    "producto": "Producto Barato",
+    "stockAmount": 12
 }
 
 ###
 
-### Obtener todos los productos sin token
+### Listar todos los productos sin token
 GET {{host}}/api/v1/productos
 
 
@@ -58,24 +56,35 @@ GET {{host}}/api/v1/productos/{{productId}}
 ### Actualizar un producto por ID sin token (da error)
 PUT {{host}}/api/v1/productos/{{productId}}
 Content-Type: application/json
+
 {
     "id": "{{productId}}",
-    "name": "Producto actualizado",
-    "stock": 150
+    "producto": "Producto actualizado",
+    "stockAmount": 146
 }
 
 ### Actualizar un producto por ID
 PUT {{host}}/api/v1/productos/{{productId}}
 Content-Type: application/json
 Authorization: Bearer {{token}}
+
 {
     "id": "{{productId}}",
-    "name": "Producto actualizado",
-    "stock": 150
+    "producto": "Producto actualizado",
+    "stockAmount": 146
 }
 
 ###
 
-### Eliminar un producto por ID protegido
-DELETE {{host}}/api/products/{{productId}}
+### Eliminar un producto por ID sin token (da error)
+DELETE {{host}}/api/v1/productos/{{productId}}
+
+### Eliminar un producto por ID
+DELETE {{host}}/api/v1/productos/{{productId}}
 Authorization: Bearer {{token}}
+
+### Endpoint para obtener el CSV de álbumes
+GET {{host}}/api/v1/albums/csv
+Authorization: Bearer {{token}}
+# Este endpoint devuelve un archivo CSV con los primeros 15 álbumes.
+# Asegúrate de que el servidor esté configurado correctamente para generar y devolver el archivo.
