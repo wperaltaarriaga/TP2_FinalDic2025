@@ -13,18 +13,23 @@ export const ProductController = {
 			});
 		} catch (error) {
 			console.error("Error al obtener los productos:", error.message);
-			response.status(500).json({ error: "No se pudieron obtener los productos" });
+			response.json({
+                statusCode: 500,
+                error: "No se pudieron obtener los productos",
+            });
 		}
 	},
 
-	// Obtener producto por ID
 	getById: async (request, response) => {
 		try {
 			const { id } = request.params;
 			const product = await productRepository.getOne(id);
 
 			if (!product) {
-				return response.status(404).json({ error:`Producto con id ${id} no encontrado` });
+				return response.json({
+                    statusCode: 404,
+                    error: `Producto con id ${id} no encontrado`,
+                });
 			}
 
 			response.status(200).json({
@@ -33,19 +38,33 @@ export const ProductController = {
 			});
 		} catch (error) {
 			console.error(`Error al obtener producto con id ${id}:`, error);
-			response.status(500).json({ error: "Error al obtener el producto"});
+			response.json({
+                statusCode: 500,
+                error: "Error al obtener el producto",
+            });
 		}
 	},
 
-	// Crear producto desde JSON (body)
 	createByJson: async (request, response) => {
 		console.log("Métodos disponibles en ProductRepositoryMongoose:", Object.keys(ProductRepositoryMongoose));
 		try {
 			const { producto, stockAmount} = request.body;
 
 			if (!producto|| !stockAmount ){
-				return response.status(400).json({ error: "Faltan campos requeridos" });
+				return response.json({
+                    statusCode: 400,
+                    error: "Faltan campos requeridos",
+                });
 			}
+
+			// Validar que stockAmount sea 0 o más
+			if (stockAmount < 0) {
+				return response.json({
+                    statusCode: 400,
+                    error: "El stockAmount debe ser 0 o mayor",
+                });
+			}
+
 			console.log(producto, stockAmount);
 			const newProduct = await productRepository.createOne({
 				producto,
@@ -53,12 +72,15 @@ export const ProductController = {
 			});
 
 			response.status(201).json({
-				message: "Producto creado exitosamente",
-				payload: newProduct,
-			});
+                message: "Producto creado exitosamente",
+                payload: newProduct,
+            });
 		} catch (error) {
 			console.error("Error al crear producto:", error.message);
-			response.status(500).json({ error: "No se pudo crear el producto" });
+			response.json({
+                statusCode: 500,
+                error: "No se pudo crear el producto",
+            });
 		}
 	},
 
@@ -68,28 +90,36 @@ export const ProductController = {
 			const { id, producto, stockAmount } = request.body;
 	
 			if (!id) {
-				return response.status(400).json({ error: "El ID del producto es obligatorio" });
+				return response.json({
+                    statusCode: 400,
+                    error: "El ID del producto es obligatorio",
+                });
 			}
 	
 			if (typeof stockAmount !== "number") {
-				return response.status(400).json({ error: "El stockAmount debe ser un número válido" });
+				return response.json({
+                    statusCode: 400,
+                    error: "El stockAmount debe ser un número válido",
+                });
 			}
-	
-			// Obtener el producto actual
+
 			const product = await productRepository.getOne(id);
 			if (!product) {
-				return response.status(404).json({ error: "Producto no encontrado" });
+				return response.json({
+                    statusCode: 404,
+                    error: "Producto no encontrado",
+                });
 			}
 	
 			// Validar que el stockAmount nunca sea menor a 0 y solo se pueda actualizar de uno en uno
 			const stockAmountDifference = Math.abs(product.stockAmount - stockAmount);
 			if (stockAmount < 0 || stockAmountDifference !== 1) {
-				return response.status(400).json({
+				return response.json({
+					statusCode: 400,
 					error: "El stockAmount debe ser mayor o igual a 0 y solo puede ser incrementado o decrementado en 1 unidad",
 				});
 			}
 	
-			// Actualizar el producto
 			const updated = await productRepository.updateOne(id, {
 				producto,
 				stockAmount,
@@ -101,11 +131,13 @@ export const ProductController = {
 			});
 		} catch (error) {
 			console.error("Error al actualizar producto:", error.message);
-			response.status(500).json({ error: "Error interno del servidor" });
+			response.status(500).json({
+                statusCode: 500,
+                error: "Error interno del servidor",
+            });
 		}
 	},
 
-	// Eliminar producto por ID
 	deleteById: async (request, response) => {
 		try {
 			const { id } = request.params;
@@ -118,7 +150,10 @@ export const ProductController = {
 			});
 		} catch (error) {
 			console.error("Error al eliminar producto:", error.message);
-			response.status(500).json({ error: "Error interno del servidor" });
+			response.json({
+                statusCode: 500,
+                error: "Error interno del servidor",
+            });
 		}
 	},
 };
